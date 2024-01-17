@@ -243,6 +243,18 @@ func newRemoteAction(action string) *remoteAction {
 	// support http(s)://host/owner/repo@v3
 	for _, schema := range []string{"https://", "http://"} {
 		if strings.HasPrefix(action, schema) {
+			if(strings.Contains(action, "internal-git")){
+				splits := strings.SplitN(strings.TrimPrefix(action, schema), "/", 3)
+				if len(splits) != 3 {
+					return nil
+				}
+				ret := parseAction(splits[2])
+				if ret == nil {
+					return nil
+				}
+				ret.URL = schema + splits[0] + "/" + splits[1]
+				return ret
+			}
 			splits := strings.SplitN(strings.TrimPrefix(action, schema), "/", 2)
 			if len(splits) != 2 {
 				return nil
