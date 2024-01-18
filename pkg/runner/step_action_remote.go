@@ -62,13 +62,18 @@ func (sar *stepActionRemote) prepareActionExecutor() common.Executor {
 				github.Token = sar.RunContext.Config.ReplaceGheActionTokenWithGithubCom
 			}
 		}
-
+		token := ""
+		if isJuegoInternalServerPrefix(sar.remoteAction.CloneURL(sar.RunContext.Config.DefaultActionInstance)) {
+ 		   token = ar.RunContext.Config.ReplaceGheActionTokenWithGithubCom
+		} 
 		actionDir := fmt.Sprintf("%s/%s", sar.RunContext.ActionCacheDir(), safeFilename(sar.Step.Uses))
 		gitClone := stepActionRemoteNewCloneExecutor(git.NewGitCloneExecutorInput{
 			URL:   sar.remoteAction.CloneURL(sar.RunContext.Config.DefaultActionInstance),
 			Ref:   sar.remoteAction.Ref,
 			Dir:   actionDir,
-			Token: "", /*
+			Token: token, /*
+				//Note added token back
+   	
 				Shouldn't provide token when cloning actions,
 				the token comes from the instance which triggered the task,
 				however, it might be not the same instance which provides actions.
@@ -239,10 +244,18 @@ func (ra *remoteAction) IsCheckout() bool {
 	return false
 }
 
+func  isJuegoInternalServerPrefix(action string) bool {
+	//Note: Patch - Hard coded for juegoserver
+	if(strings.Contains(action, "internal-git.juegostudio.net/git")){
+		return true;
+	}
+
+	return false;
+}
 
 func  hasAServicePrefix(action string) bool {
 	//Note: Patch - Hard coded for juegoserver
-	if(strings.Contains(action, "internal-git.juegostudio.net/git")){
+	if(isJuegoInternalServerPrefix(action)){
 		return true;
 	}
 
