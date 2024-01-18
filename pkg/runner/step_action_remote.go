@@ -240,7 +240,7 @@ func (ra *remoteAction) IsCheckout() bool {
 }
 
 
-func (action string) hasAServicePrefix() bool {
+func  hasAServicePrefix(action string) bool {
 	//Note: Patch - Hard coded for juegoserver
 	if(strings.Contains(action, "internal-git.juegostudio.net/git")){
 		return true;
