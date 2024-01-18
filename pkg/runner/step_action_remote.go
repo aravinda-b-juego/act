@@ -239,11 +239,23 @@ func (ra *remoteAction) IsCheckout() bool {
 	return false
 }
 
+
+func (action string) hasAServicePrefix() bool {
+	//Note: Patch - Hard coded for juegoserver
+	if(strings.Contains(action, "internal-git.juegostudio.net/git")){
+		return true;
+	}
+
+	return false;
+}
+
+
+
 func newRemoteAction(action string) *remoteAction {
 	// support http(s)://host/owner/repo@v3
 	for _, schema := range []string{"https://", "http://"} {
 		if strings.HasPrefix(action, schema) {
-			if(strings.Contains(action, "internal-git")){
+			if(hasAServicePrefix(action)){
 				splits := strings.SplitN(strings.TrimPrefix(action, schema), "/", 3)
 				if len(splits) != 3 {
 					return nil
