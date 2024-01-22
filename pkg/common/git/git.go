@@ -292,6 +292,7 @@ func NewGitCloneExecutor(input NewGitCloneExecutorInput) common.Executor {
 		logger := common.Logger(ctx)
 		logger.Infof("  \u2601  git clone '%s' # ref=%s", input.URL, input.Ref)
 		logger.Debugf("  cloning %s to %s", input.URL, input.Dir)
+		logger.Debugf("  cloning with token: %s", input.Token)
 
 		cloneLock.Lock()
 		defer cloneLock.Unlock()
