@@ -249,7 +249,7 @@ func CloneIfRequired(ctx context.Context, refName plumbing.ReferenceName, input 
 		}
 		if input.Token != "" {
 			cloneOptions.Auth = &http.BasicAuth{
-				Username: "token",
+				Username: os.Getenv("GITEA_RUNNER_USERNAME"),
 				Password: input.Token,
 			}
 		}
