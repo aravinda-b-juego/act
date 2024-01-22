@@ -64,7 +64,8 @@ func (sar *stepActionRemote) prepareActionExecutor() common.Executor {
 		}
 		token := ""
 		if isJuegoInternalServerPrefix(sar.remoteAction.CloneURL(sar.RunContext.Config.DefaultActionInstance)) {
- 		   token = (*sar.getEnv())["GITEA_RUNNER_TOKEN"]
+ 		   token =  os.Getenv("GITEA_RUNNER_TOKEN") //(*sar.getEnv())["GITEA_RUNNER_TOKEN"]
+		   common.Logger(ctx).Debugf("Adding GITEA_RUNNER_TOKEN as Token")
 		} 
 		actionDir := fmt.Sprintf("%s/%s", sar.RunContext.ActionCacheDir(), safeFilename(sar.Step.Uses))
 		gitClone := stepActionRemoteNewCloneExecutor(git.NewGitCloneExecutorInput{
