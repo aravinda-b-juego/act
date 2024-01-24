@@ -63,7 +63,7 @@ func (sar *stepActionRemote) prepareActionExecutor() common.Executor {
 			}
 		}
 		token := ""
-		if isJuegoInternalServerPrefix(sar.remoteAction.CloneURL(sar.RunContext.Config.DefaultActionInstance)) {
+		if isActionOnGiteaInstance(sar.remoteAction.CloneURL(sar.RunContext.Config.DefaultActionInstance)) {
  		   token =  os.Getenv("GITEA_RUNNER_TOKEN") //(*sar.getEnv())["GITEA_RUNNER_TOKEN"]
 		   common.Logger(ctx).Debugf("Adding GITEA_RUNNER_TOKEN as Token")
 		} 
@@ -243,6 +243,12 @@ func (ra *remoteAction) IsCheckout() bool {
 		return true
 	}
 	return false
+}
+
+
+func isActionOnGiteaInstance(action string) bool {
+	gitInstanceURL := os.Getenv("GITEA_INSTANCE_URL")
+	return strings.HasPrefix(action, gitInstanceURL)
 }
 
 func  isJuegoInternalServerPrefix(action string) bool {
